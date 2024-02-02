@@ -1,18 +1,32 @@
 
 const uniqueid=require("short-unique-id");
-const Url =require("../models/user");
+const Url =require("../models/url");
 
 async function handelgeneratenewid(req,res){
     const body = req.body;
+    let response=[];
     const ShortID = new uniqueid({length:8}).rnd();
     await  Url.create({
         shortid:ShortID,
         redirecturl:body.url,
         timestamp:[],
-
-
     })
-    return res.status(201).json({"status":"complete"});
+    const url = Url.find({});
+    if(!url){
+        return res.end();
+    }
+    else{
+        
+    (await url).forEach(element => {    
+        response.push({
+            shortid: element.shortid,
+            redirecturl: element.redirecturl
+        });
+    });
+        
+        res.send(response);
+    }
+    
 
 }
 

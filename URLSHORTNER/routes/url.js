@@ -4,8 +4,9 @@ const {handelgeneratenewid,
     handeldeletebyid,
     handelgetwithid,
     handelgetidwithanalytics}=require("../controllers/url");
+const {Userlogin} =require("../middleware/userlogin")
 
-router.post("/",handelgeneratenewid);
+router.post("/",Userlogin,handelgeneratenewid);
 
 router.delete("/:id",handeldeletebyid);
 
