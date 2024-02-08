@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div class="flex justify-center items-center min-h-screen">
+    <div class="w-2/5 ">
+      <div class="h-80" ><ul id="content"></ul></div> <!-- Placeholder for content -->
+      <form action="" id="form" class="flex  justify-center pb-8">
+        <input type="text" id="input" placeholder="message" class="border border-red-600 h-10 rounded-2xl focus:outline-none p-3 mr-2 grow"> 
+        <input type="text" id="room" placeholder="roomid" class="border border-red-600 h-10 rounded-2xl focus:outline-none p-3 mr-2 grow">       
+        <button type="submit"  class="w-16 h-10 bg-gray-600 text-white rounded-2xl">Send</button>
+      </form>
+
+      <form action="" id="roomform" class="flex  justify-center pb-8">
+        <input type="text" id="roomname" placeholder="roomname" class="border border-red-600 h-10 rounded-2xl focus:outline-none p-3 mr-2 grow">
+        <button type="submit"  class="w-16 h-10 bg-gray-600 text-white rounded-2xl">Join</button>
+      </form>
+     
+    </div>
+  </div>
+
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  
+  const input = document.getElementById("input")
+  const roomform = document.getElementById("roomform")
+  const roomname = document.getElementById("roomname")
+  const form = document.getElementById("form")
+  const room = document.getElementById("room")
+  const message = document.getElementById("content")
+
+  const formresult = form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    if(input.value && room.value){
+      socket.emit("chat message",input.value,room.value)
+      input.value='';
+      room.value='';
+    }
+  })
+
+  roomform.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    if(roomname.value){
+      socket.emit("room name",roomname.value)
+      roomname.value='';
+     
+    }
+  })
+
+ 
+  socket.on("chat message",(mesg,room)=>{
+    
+    const chat = document.createElement('li');
+    chat.textContent = mesg; 
+    
+    message.appendChild(chat); 
+  })
+
+  
+
+
+</script>
+</body>
+</html>
